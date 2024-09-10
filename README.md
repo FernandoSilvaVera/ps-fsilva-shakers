@@ -3,9 +3,7 @@
 
 To install this module, you need to clone the following repository and rename the folder to `ps_customer_loyalty`:
 
-``bash
 git clone https://github.com/FernandoSilvaVera/ps-fsilva-shakers ps_customer_loyalty
-`
 
 ## Testing
 
