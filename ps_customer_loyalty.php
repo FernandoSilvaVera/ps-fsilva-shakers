@@ -11,7 +11,7 @@ class Ps_Customer_Loyalty extends Module
         $this->name = 'ps_customer_loyalty';
         $this->tab = 'administration';
         $this->version = '1.0.0';
-        $this->author = 'Fernando Silva - Shakers';
+        $this->author = 'TuNombre';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
@@ -32,6 +32,8 @@ class Ps_Customer_Loyalty extends Module
     {
         return parent::install()
             && $this->registerHook('actionValidateOrder')
+            && $this->registerHook('displayCustomerAccount')
+            && $this->registerHook('moduleRoutes')
             && $this->installDb();
     }
 
@@ -81,5 +83,29 @@ class Ps_Customer_Loyalty extends Module
                 VALUES ('.(int)$customer->id.', '.(int)$pointsEarned.')
             ');
         }
+    }
+
+    public function hookDisplayCustomerAccount()
+	{
+        $this->context->smarty->assign(array(
+            'loyalty_points_link' => $this->context->link->getModuleLink('ps_customer_loyalty', 'loyalty')
+        ));
+
+        return $this->display(__FILE__, 'views/templates/hook/my-account.tpl');
+    }
+
+    public function hookModuleRoutes($params)
+    {
+        return array(
+            'module-ps_customer_loyalty-loyalty' => array(
+                'controller' => 'loyalty',
+                'rule' => 'loyalty',
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'ps_customer_loyalty',
+                )
+            )
+        );
     }
 }
