@@ -8,6 +8,7 @@ class Ps_Customer_Loyalty extends Module
 {
 
 	const MAX_EURO = "10";
+	const POINT_TO_EURO = 1;
 
     public function __construct()
     {
@@ -36,6 +37,8 @@ class Ps_Customer_Loyalty extends Module
         return parent::install()
             && $this->registerHook('actionValidateOrder')
             && $this->registerHook('displayCustomerAccount')
+			&& $this->registerHook('displayCheckoutSummaryTop')
+			&& $this->registerHook('actionCartSave')
             && $this->registerHook('moduleRoutes')
             && $this->installDb();
     }
@@ -112,10 +115,8 @@ class Ps_Customer_Loyalty extends Module
         );
 	}
 
-
-	public function hookDisplayCheckoutSummary($params)
+	public function hookDisplayCheckoutSummaryTop($params)
 	{
-		die("fer");
 		$customer = $this->context->customer;
 
 		if ($customer->isLogged()) {
@@ -138,17 +139,18 @@ class Ps_Customer_Loyalty extends Module
 
 	public function hookActionCartSave($params)
 	{
+
 		if (Tools::isSubmit('redeem_points')) {
 			$pointsToRedeem = (int)Tools::getValue('loyalty_points_redeem');
 			$customer = $this->context->customer;
-			
+
 			$points = Db::getInstance()->getValue('
 				SELECT points FROM `'._DB_PREFIX_.'customer_loyalty`
 				WHERE id_customer = '.(int)$customer->id
 			);
 
 			if ($points && $pointsToRedeem > 0 && $pointsToRedeem <= $points) {
-				$discountAmount = $pointsToRedeem * 1;
+				$discountAmount = $pointsToRedeem * self::POINT_TO_EURO;
 
 				$cart = $this->context->cart;
 				$cart->addCartRule($this->createCartRule($discountAmount));
@@ -161,6 +163,7 @@ class Ps_Customer_Loyalty extends Module
 			}
 		}
 	}
+
 
 	private function createCartRule($discountAmount)
 	{
