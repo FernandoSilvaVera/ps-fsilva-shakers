@@ -115,6 +115,7 @@ class Ps_Customer_Loyalty extends Module
 
 	public function hookDisplayCheckoutSummary($params)
 	{
+		die("fer");
 		$customer = $this->context->customer;
 
 		if ($customer->isLogged()) {
