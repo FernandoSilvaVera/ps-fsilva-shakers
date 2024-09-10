@@ -4,7 +4,7 @@
 
 You can test the module in action here:
 
-[https://prestashop.fernandosilva.es/pedido](https://prestashop.fernandosilva.es/pedido)
+[https://prestashop.fernandosilva.es](https://prestashop.fernandosilva.es)
 
 ## Description
 
