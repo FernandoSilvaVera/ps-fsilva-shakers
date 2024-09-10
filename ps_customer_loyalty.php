@@ -14,7 +14,7 @@ class Ps_Customer_Loyalty extends Module
         $this->name = 'ps_customer_loyalty';
         $this->tab = 'administration';
         $this->version = '1.0.0';
-        $this->author = 'TuNombre';
+        $this->author = 'Fernando Silva - Shakers';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
