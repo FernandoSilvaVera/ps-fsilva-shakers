@@ -1,5 +1,11 @@
 # ps_customer_loyalty
 
+## Testing
+
+You can test the module in action here:
+
+[https://prestashop.fernandosilva.es/pedido](https://prestashop.fernandosilva.es/pedido)
+
 ## Description
 
 The **ps_customer_loyalty** module allows customers to accumulate loyalty points based on the amount spent on their orders. These points can be redeemed as discounts on future purchases. The module includes a loyalty page in the customer account section to display accumulated points and a field in the checkout page to redeem those points as a discount.
