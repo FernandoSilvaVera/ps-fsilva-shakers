@@ -6,6 +6,9 @@ if (!defined('_PS_VERSION_')) {
 
 class Ps_Customer_Loyalty extends Module
 {
+
+	const MAX_EURO = "10";
+
     public function __construct()
     {
         $this->name = 'ps_customer_loyalty';
@@ -64,7 +67,7 @@ class Ps_Customer_Loyalty extends Module
         $order = $params['order'];
         $customer = new Customer((int)$order->id_customer);
         $totalPaid = $order->total_paid;
-        $pointsEarned = floor($totalPaid / 10);
+        $pointsEarned = floor($totalPaid / self::MAX_EURO);
 
         $existingPoints = Db::getInstance()->getValue('
             SELECT points FROM `'._DB_PREFIX_.'customer_loyalty`
@@ -107,5 +110,72 @@ class Ps_Customer_Loyalty extends Module
                 )
             )
         );
-    }
+	}
+
+
+	public function hookDisplayCheckoutSummary($params)
+	{
+		$customer = $this->context->customer;
+
+		if ($customer->isLogged()) {
+			$points = Db::getInstance()->getValue('
+				SELECT points FROM `'._DB_PREFIX_.'customer_loyalty`
+				WHERE id_customer = '.(int)$customer->id
+			);
+
+			if ($points === false) {
+				$points = 0;
+			}
+
+			$this->context->smarty->assign(array(
+				'loyalty_points' => $points
+			));
+
+			return $this->display(__FILE__, 'views/templates/hook/checkout-loyalty.tpl');
+		}
+	}
+
+	public function hookActionCartSave($params)
+	{
+		if (Tools::isSubmit('redeem_points')) {
+			$pointsToRedeem = (int)Tools::getValue('loyalty_points_redeem');
+			$customer = $this->context->customer;
+			
+			$points = Db::getInstance()->getValue('
+				SELECT points FROM `'._DB_PREFIX_.'customer_loyalty`
+				WHERE id_customer = '.(int)$customer->id
+			);
+
+			if ($points && $pointsToRedeem > 0 && $pointsToRedeem <= $points) {
+				$discountAmount = $pointsToRedeem * 1;
+
+				$cart = $this->context->cart;
+				$cart->addCartRule($this->createCartRule($discountAmount));
+
+				Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'customer_loyalty`
+					SET points = points - '.(int)$pointsToRedeem.'
+					WHERE id_customer = '.(int)$customer->id
+				);
+			}
+		}
+	}
+
+	private function createCartRule($discountAmount)
+	{
+		$cartRule = new CartRule();
+		$cartRule->id_customer = $this->context->customer->id;
+		$cartRule->date_from = date('Y-m-d H:i:s');
+		$cartRule->date_to = date('Y-m-d H:i:s', strtotime('+1 day'));
+		$cartRule->description = 'Loyalty points discount';
+		$cartRule->quantity = 1;
+		$cartRule->reduction_amount = (float)$discountAmount;
+		$cartRule->reduction_tax = true;
+		$cartRule->active = true;
+		$cartRule->add();
+		
+		return $cartRule;
+	}
+
+
 }
