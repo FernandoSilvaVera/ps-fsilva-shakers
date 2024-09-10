@@ -1,5 +1,13 @@
 # ps_customer_loyalty
 
+## Installation via Git
+
+To install this module, you need to clone the following repository and rename the folder to `ps_customer_loyalty`:
+
+``bash
+git clone https://github.com/FernandoSilvaVera/ps-fsilva-shakers ps_customer_loyalty`
+
+
 ## Testing
 
 You can test the module in action here:
@@ -16,15 +24,6 @@ The **ps_customer_loyalty** module allows customers to accumulate loyalty points
 - **Point redemption**: Customers can redeem accumulated points for discounts on future purchases.
 - **Customer account page**: Displays the customer's accumulated points.
 - **Checkout page field**: Allows the customer to apply accumulated points as a discount.
-
-## Installation
-
-1. **Upload the module**: Copy the `ps_customer_loyalty` folder to the `/modules/` directory of your PrestaShop installation.
-2. **Install the module**:
-   - In the PrestaShop Back Office, go to **Modules > Module Manager**.
-   - Search for the module **Customer Loyalty Program** and click **Install**.
-3. **Configuration**:
-   - Access the module's configuration page and adjust the ratio of points per euros spent if needed.
 
 ## How the Module Works
 
