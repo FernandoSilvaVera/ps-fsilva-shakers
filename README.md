@@ -22,7 +22,7 @@ The **ps_customer_loyalty** module allows customers to accumulate loyalty points
 
 ## How the Module Works
 
-1. **Point Accumulation**: 
+1. **Point Accumulation**:
    - Each time a customer places an order, the `actionValidateOrder` hook calculates the points based on the total paid. By default, 1 point is earned for every 10 euros. This is controlled by the constant `MAX_EURO` in the `ps_customer_loyalty.php` file, which can be modified as needed:
 
      ```php
@@ -33,6 +33,12 @@ The **ps_customer_loyalty** module allows customers to accumulate loyalty points
 
 2. **Point Redemption**:
    - In the checkout page, the customer can input the number of points they want to redeem. These points are converted into a discount and applied to the cart total.
+   - The discount value is controlled by the constant `POINT_TO_EURO`, which specifies how many euros are given per point redeemed:
+
+     ```php
+     const POINT_TO_EURO = 1; // 1 point = 1 euro
+     ```
+
    - The redeemed points are automatically deducted from the customer's account.
 
 3. **Loyalty Points in "My Account"**:
